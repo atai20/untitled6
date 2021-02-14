@@ -1,3 +1,4 @@
+import pygame
 class Vector(list):
     def __init__(self, *n):
         for i in n:
@@ -80,22 +81,48 @@ class Point():
 
 
 class InteractionField:
-    def __init__(self, F):  # F - это кастомное взаимодействие, F(p1, p2, r), p1, p2 - точки, r - расстояние между ними
+    def __init__(self):  # F - это кастомное взаимодействие, F(p1, p2, r), p1, p2 - точки, r - расстояние между ними
         self.points = []
-        self.F = F
+
 
     def append(self, *args, **kwargs):
         self.points.append(Point(*args, **kwargs))
-    
+
+    def F(self, p1, p2, r):
+        if r == 0:
+            int1_1 = p1.mass
+            int1_2 = p2.mass
+            int1_3 = p1.mass*p1.speed[0] + p2.mass*p2.speed[0]
+            int2_1 = 1
+            int2_2 = -1
+            int2_3 = p2.speed[0]-p1.speed[0]
+            int3_1 = int1_1+int2_1
+            int3_2 = int1_2+int2_2
+            int3_3 = int1_3+int2_3
+            int4_1 = int3_1/int3_1
+            int4_2 = int3_2/int3_1
+            int4_3 = int3_3/int3_1
+
+            p1.speed[0] = int4_3-int4_2
+            p1.speed[1] = -int2_3+p1.speed[0]
+
+            # я тут тупил
+
+
+
+
     def step(self, dt):
         for p in self.points:
             p.clean_acc()
             p.accelerate(dt)
             p.move(dt)
 
+Ball1 = Point(Vector(100, 300), 2,  speed=Vector(1, 5))
+Ball2 = Point(Vector(100, 300), 1,  speed=Vector(-1, 5))
 
-Space = InteractionField(Vector(1, 0))
+Space = InteractionField()
+Space.F(Ball1, Ball2, 0)
 
-Space.step(1)
-Ball = Point(Vector(100, 300), speed=Vector(2, 5))
+
+
 
