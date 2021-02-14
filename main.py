@@ -1,4 +1,20 @@
 import pygame
+import time
+
+pygame.init()
+
+clock = pygame.time.Clock()
+
+win = pygame.display.set_mode((600, 600))
+run = True
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (125, 125, 125)
+LIGHT_BLUE = (64, 128, 255)
+GREEN = (0, 200, 64)
+YELLOW = (225, 225, 0)
+PINK = (230, 50, 230)
+
 class Vector(list):
     def __init__(self, *n):
         for i in n:
@@ -9,11 +25,11 @@ class Vector(list):
         if type(other) is Vector:
             assert len(self) == len(other), "Error 0"
             for i in range(len(self)):
-                res.append(self[i] - other[i])
+                res.append(self[i] + other[i])
             return res
         elif type(other) == int:
             for i in self:
-                res.append(i - other)
+                res.append(i + other)
         return res
 
     def __sub__(self, other):
@@ -58,15 +74,17 @@ class Vector(list):
 class Point():
     def __init__(self, coords, mass = 1.0, speed=None):
         self.coords = coords
+
         if speed is None:
-            self.speed = Vector(*[0 for i in range(len(coords))])
+            self.speed = Vector(*[0 for i in range(1)])
         else:
             self.speed = speed
-        self.acc = Vector(*[0 for i in range(len(coords))])
+        self.acc = Vector(*[0 for i in range(1)])
         self.mass = mass
 
-    def move(self, dt):
-        self.coords =  self.speed*dt
+
+    def move(self):
+        self.coords = self.coords + self.speed
         return self.coords
 
     def accelerate(self, dt):
@@ -78,6 +96,10 @@ class Point():
     def clean_acc(self):
         self.acc = self.acc * 0
 
+    def draw(self):
+        return pygame.draw.circle(win, PINK,
+                           (int(self.coords[0]), int(self.coords[1])), 50, 10)
+
 
 
 class InteractionField:
@@ -85,11 +107,11 @@ class InteractionField:
         self.points = []
 
 
-    def append(self, *args, **kwargs):
-        self.points.append(Point(*args, **kwargs))
-
-    def F(self, p1, p2, r):
-        if r == 0:
+    def append(self, *args):
+        for i in list(args):
+            self.points.append(i)
+    def F(self, p1, p2):
+        if p1.draw().colliderect(p2.draw()):
             int1_1 = p1.mass
             int1_2 = p2.mass
             int1_3 = p1.mass*p1.speed[0] + p2.mass*p2.speed[0]
@@ -104,7 +126,8 @@ class InteractionField:
             int4_3 = int3_3/int3_1
 
             p1.speed[0] = int4_3-int4_2
-            p1.speed[1] = -int2_3+p1.speed[0]
+            p2.speed[0] = -int2_3+p1.speed[0]
+
 
             # я тут тупил
 
@@ -117,12 +140,31 @@ class InteractionField:
             p.accelerate(dt)
             p.move(dt)
 
-Ball1 = Point(Vector(100, 300), 2,  speed=Vector(1, 5))
-Ball2 = Point(Vector(100, 300), 1,  speed=Vector(-1, 5))
+Ball1 = Point(Vector(0, 300), 5,  speed=Vector(1, 0))
+Ball2 = Point(Vector(400, 300), 3,  speed=Vector(-1, 0))
 
 Space = InteractionField()
-Space.F(Ball1, Ball2, 0)
+Space.append(Ball1, Ball2)
 
+datetime = 0
+
+while run:
+
+
+    datetime += 1
+    Space.F(Ball1, Ball2)
+    win.fill(BLACK)
+    Space.points[0].draw()
+    Space.points[1].draw()
+    Space.points[0].move()
+    Space.points[1].move()
+
+
+    pygame.display.update()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
 
 
 
