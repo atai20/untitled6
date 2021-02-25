@@ -1,5 +1,6 @@
 import pygame
 import time
+import math
 
 pygame.init()
 
@@ -111,7 +112,20 @@ class InteractionField:
         for i in list(args):
             self.points.append(i)
     def F(self, p1, p2):
-        if p1.draw().colliderect(p2.draw()):
+        if p1.coords[0] > p2.coords[0]:
+            p_e_x = p1.coords[0] - p2.coords[0]
+        if p1.coords[0] < p2.coords[0]:
+            p_e_x = p2.coords[0] - p1.coords[0]
+        if p1.coords[1] > p2.coords[1]:
+            p_e_y = p1.coords[1] - p2.coords[1]
+        if p1.coords[1] < p2.coords[1]:
+            p_e_y = p2.coords[1] - p1.coords[1]
+        if p1.coords[1] == p2.coords[1]:
+            p_e_y = p1.coords[1]
+        if p1.coords[0] == p2.coords[0]:
+            p_e_x = p1.coords[0]
+        p_e_l = math.sqrt(p_e_y**2+p_e_x**2)
+        if p_e_l<100:
             int1_1 = p1.mass
             int1_2 = p2.mass
             int1_3 = p1.mass*p1.speed[0] + p2.mass*p2.speed[0]
@@ -128,7 +142,6 @@ class InteractionField:
             p1.speed[0] = int4_3-int4_2
             p2.speed[0] = -int2_3+p1.speed[0]
 
-
             # я тут тупил
 
 
@@ -140,8 +153,8 @@ class InteractionField:
             p.accelerate(dt)
             p.move(dt)
 
-Ball1 = Point(Vector(0, 300), 5,  speed=Vector(1, 0))
-Ball2 = Point(Vector(400, 300), 3,  speed=Vector(-1, 0))
+Ball1 = Point(Vector(100, 290), 1,  speed=Vector(0.1, 0))
+Ball2 = Point(Vector(400, 350), 1,  speed=Vector(-1, 0))
 
 Space = InteractionField()
 Space.append(Ball1, Ball2)
