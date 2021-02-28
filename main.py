@@ -126,6 +126,7 @@ class InteractionField:
             p_e_x = p1.coords[0]
         p_e_l = math.sqrt(p_e_y**2+p_e_x**2)
         if p_e_l<100:
+
             int1_1 = p1.mass
             int1_2 = p2.mass
             int1_3 = p1.mass*p1.speed[0] + p2.mass*p2.speed[0]
@@ -138,9 +139,27 @@ class InteractionField:
             int4_1 = int3_1/int3_1
             int4_2 = int3_2/int3_1
             int4_3 = int3_3/int3_1
+            if p1 == self.points[1]:
 
-            p1.speed[0] = int4_3-int4_2
-            p2.speed[0] = -int2_3+p1.speed[0]
+                p1.speed[0] = int4_3-int4_2
+
+                p2.speed[0] = -int2_3+p1.speed[0]
+
+                p1.speed[0] = (p_e_x / 100) * p1.speed[0]
+                p1.speed[1] = (p_e_y / 100) * p1.speed[0]
+
+                if (p2.coords[1] > p1.coords[1]):
+                    p1.speed[1] = -p1.speed[1]
+            elif p1 == self.points[0]:
+                p1.speed[0] = int4_3 - int4_2
+
+                p2.speed[0] = -int2_3 + p1.speed[0]
+
+                p2.speed[0] = (p_e_x / 100) * p2.speed[0]
+                p2.speed[1] = (p_e_y / 100) * p2.speed[0]
+                if(p1.coords[1]>p2.coords[1]):
+                    p2.speed[1] = -p2.speed[1]
+                print(p_e_x)
 
             # я тут тупил
 
@@ -153,8 +172,8 @@ class InteractionField:
             p.accelerate(dt)
             p.move(dt)
 
-Ball1 = Point(Vector(100, 290), 1,  speed=Vector(0.1, 0))
-Ball2 = Point(Vector(400, 350), 1,  speed=Vector(-1, 0))
+Ball1 = Point(Vector(100, 290), 2,  speed=Vector(0.1, 0))
+Ball2 = Point(Vector(400, 340), 1,  speed=Vector(-0.1, 0))
 
 Space = InteractionField()
 Space.append(Ball1, Ball2)
