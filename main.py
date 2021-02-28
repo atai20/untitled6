@@ -15,7 +15,7 @@ LIGHT_BLUE = (64, 128, 255)
 GREEN = (0, 200, 64)
 YELLOW = (225, 225, 0)
 PINK = (230, 50, 230)
-
+#всю часть выше этого коммента делал я
 class Vector(list):
     def __init__(self, *n):
         for i in n:
@@ -96,7 +96,7 @@ class Point():
 
     def clean_acc(self):
         self.acc = self.acc * 0
-
+#вот эта функция мной сделана которая драв
     def draw(self):
         return pygame.draw.circle(win, PINK,
                            (int(self.coords[0]), int(self.coords[1])), 50, 10)
@@ -111,6 +111,7 @@ class InteractionField:
     def append(self, *args):
         for i in list(args):
             self.points.append(i)
+#вся эта всратая функция написана мной которая F
     def F(self, p1, p2):
         if p1.coords[0] > p2.coords[0]:
             p_e_x = p1.coords[0] - p2.coords[0]
@@ -172,6 +173,7 @@ class InteractionField:
             p.accelerate(dt)
             p.move(dt)
 
+#все ниже написано мной
 Ball1 = Point(Vector(100, 290), 2,  speed=Vector(0.1, 0))
 Ball2 = Point(Vector(400, 340), 1,  speed=Vector(-0.1, 0))
 
